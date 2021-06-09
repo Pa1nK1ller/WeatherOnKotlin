@@ -1,15 +1,17 @@
 package com.example.weatheronkotlin.model
 
-import com.example.weatheronkotlin.model.Repository
-import com.example.weatheronkotlin.model.Weather
-
 class RepositoryImpl : Repository {
 
     override fun getWeatherFromServer(): Weather {
         return Weather()
     }
 
-    override fun getWeatherFromLocalStorage(): Weather {
-        return Weather()
+    override fun getWeatherFromLocalStorageRus(): List<Weather> {
+        return getRussianCities()
     }
+
+    override fun getWeatherFromLocalStorageWorld(): List<Weather> {
+        return getWorldCities()
+    }
+
 }
