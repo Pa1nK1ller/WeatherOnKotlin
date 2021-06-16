@@ -47,7 +47,7 @@ class MainFragmentAdapter(private var onItemViewClickListener: OnItemViewClickLi
             itemView.apply {
                 findViewById<TextView>(R.id.mainFragmentRecyclerItemTextView).text =
                     weather.city.city
-                setOnClickListener{
+                setOnClickListener {
                     onItemViewClickListener?.onItemViewClick(weather)
                 }
             }
