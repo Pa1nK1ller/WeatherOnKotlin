@@ -9,10 +9,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.weatheronkotlin.R
 import com.example.weatheronkotlin.databinding.MainFragmentBinding
 import com.example.weatheronkotlin.model.Weather
+import com.example.weatheronkotlin.utils.showSnackBar
 import com.example.weatheronkotlin.view.details.DetailsFragment
 import com.example.weatheronkotlin.viewmodel.AppState
 import com.example.weatheronkotlin.viewmodel.MainViewModel
-import com.google.android.material.snackbar.Snackbar
 
 class MainFragment : Fragment() {
 
@@ -79,18 +79,14 @@ class MainFragment : Fragment() {
             }
             is AppState.Error -> {
                 binding.mainFragmentLoadingLayout.visibility = View.GONE
-                Snackbar
-                    .make(
-                        binding.mainFragmentFAB,
-                        getString(R.string.error),
-                        Snackbar.LENGTH_INDEFINITE
-                    )
-                    .setAction(getString(R.string.reload)) { viewModel.getWeatherFromLocalSourceRus() }
-                    .show()
+                binding.mainFragmentRootView.showSnackBar(
+                    getString(R.string.error),
+                    getString(R.string.reload),
+                    { viewModel.getWeatherFromLocalSourceRus() })
             }
         }
-
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -102,7 +98,6 @@ class MainFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance() =
-            MainFragment()
+        fun newInstance() = MainFragment()
     }
 }
