@@ -4,7 +4,8 @@ import com.example.weatheronkotlin.model.Weather
 import com.example.weatheronkotlin.model.getRussianCities
 import com.example.weatheronkotlin.model.getWorldCities
 
-class MainRepositoryImpl : MainRepository {
+class MainRepositoryImpl :
+    MainRepository {
 
     override fun getWeatherFromServer() =
         Weather()
