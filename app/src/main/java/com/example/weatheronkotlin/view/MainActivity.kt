@@ -1,16 +1,20 @@
 package com.example.weatheronkotlin.view
 
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.example.weatheronkotlin.R
 import com.example.weatheronkotlin.databinding.MainActivityBinding
+import com.example.weatheronkotlin.view.experiments.ContentProviderFragment
 import com.example.weatheronkotlin.view.history.HistoryFragment
 import com.example.weatheronkotlin.view.main.MainFragment
 
 class MainActivity : AppCompatActivity() {
 
+    private val receiver = MyBroadcastReceiver()
     private lateinit var binding: MainActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,6 +26,12 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.container, MainFragment.newInstance())
                 .commitAllowingStateLoss()
         }
+        registerReceiver(receiver, IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED))
+    }
+
+    override fun onDestroy() {
+        unregisterReceiver(receiver)
+        super.onDestroy()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -35,6 +45,15 @@ class MainActivity : AppCompatActivity() {
                 supportFragmentManager.apply {
                     beginTransaction()
                         .add(R.id.container, HistoryFragment.newInstance())
+                        .addToBackStack("")
+                        .commitAllowingStateLoss()
+                }
+                true
+            }
+            R.id.menu_content_provider -> {
+                supportFragmentManager.apply {
+                    beginTransaction()
+                        .add(R.id.container, ContentProviderFragment.newInstance())
                         .addToBackStack("")
                         .commitAllowingStateLoss()
                 }
