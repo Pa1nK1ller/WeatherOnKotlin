@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 true
             }
-            R.id.menu_content_provider -> {
+            /*R.id.menu_content_provider -> {
                 supportFragmentManager.apply {
                     beginTransaction()
                         .add(R.id.container, ContentProviderFragment.newInstance())
@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
                         .commitAllowingStateLoss()
                 }
                 true
-            }
+            }*/
             R.id.menu_google_maps -> {
                 supportFragmentManager.apply {
                     beginTransaction()
