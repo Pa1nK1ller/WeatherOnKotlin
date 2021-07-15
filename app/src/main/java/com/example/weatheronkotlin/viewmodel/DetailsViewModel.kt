@@ -6,10 +6,7 @@ import com.example.weatheronkotlin.app.App.Companion.getHistoryDao
 import com.example.weatheronkotlin.app.AppState
 import com.example.weatheronkotlin.model.Weather
 import com.example.weatheronkotlin.model.WeatherDTO
-import com.example.weatheronkotlin.repository.DetailsRepository
-import com.example.weatheronkotlin.repository.DetailsRepositoryImpl
-import com.example.weatheronkotlin.repository.LocalRepositoryImpl
-import com.example.weatheronkotlin.repository.RemoteDataSource
+import com.example.weatheronkotlin.repository.*
 import com.example.weatheronkotlin.utils.convertDtoToModel
 import retrofit2.Call
 import retrofit2.Callback

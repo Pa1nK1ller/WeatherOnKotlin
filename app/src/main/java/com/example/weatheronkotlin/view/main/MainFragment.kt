@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -22,11 +23,11 @@ import com.example.weatheronkotlin.model.City
 import com.example.weatheronkotlin.model.Weather
 import com.example.weatheronkotlin.utils.showSnackBar
 import com.example.weatheronkotlin.view.details.DetailsFragment
-import com.example.weatheronkotlin.view.experiments.REQUEST_CODE
 import com.example.weatheronkotlin.viewmodel.MainViewModel
 import java.io.IOException
 
 private const val IS_WORLD_KEY = "LIST_OF_TOWNS_KEY"
+private const val REQUEST_CODE = 12345
 private const val REFRESH_PERIOD = 60000L
 private const val MINIMAL_DISTANCE = 100f
 
@@ -38,14 +39,7 @@ class MainFragment : Fragment() {
     private var isDataSetRus: Boolean = true
     private val adapter = MainFragmentAdapter(object : OnItemViewClickListener {
         override fun onItemViewClick(weather: Weather) {
-            activity?.supportFragmentManager?.apply {
-                beginTransaction()
-                    .add(R.id.container, DetailsFragment.newInstance(Bundle().apply {
-                        putParcelable(DetailsFragment.BUNDLE_EXTRA, weather)
-                    }))
-                    .addToBackStack("")
-                    .commitAllowingStateLoss()
-            }
+            openDetailsFragment(weather)
         }
     })
 
@@ -94,17 +88,10 @@ class MainFragment : Fragment() {
 
     private fun showListOfTowns() {
         activity?.let {
-            if (it.getPreferences(Context.MODE_PRIVATE)
-                    .getBoolean(IS_WORLD_KEY, false)
-            ) changeWeatherDataSet() else viewModel.getWeatherFromLocalSourceRus()
-        }
-    }
-
-    private fun saveListOfTowns() {
-        activity?.let {
-            with(it.getPreferences(Context.MODE_PRIVATE).edit()) {
-                putBoolean(IS_WORLD_KEY, !isDataSetRus)
-                apply()
+            if (it.getPreferences(Context.MODE_PRIVATE).getBoolean(IS_WORLD_KEY, false)) {
+                changeWeatherDataSet()
+            } else {
+                viewModel.getWeatherFromLocalSourceRus()
             }
         }
     }
@@ -120,6 +107,15 @@ class MainFragment : Fragment() {
         isDataSetRus = !isDataSetRus
 
         saveListOfTowns()
+    }
+
+    private fun saveListOfTowns() {
+        activity?.let {
+            with(it.getPreferences(Context.MODE_PRIVATE).edit()) {
+                putBoolean(IS_WORLD_KEY, !isDataSetRus)
+                apply()
+            }
+        }
     }
 
     private fun renderData(appState: AppState) {
@@ -149,7 +145,6 @@ class MainFragment : Fragment() {
                     getLocation()
                 }
                 shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) -> {
-
                     showRationaleDialog()
                 }
                 else -> {
@@ -160,10 +155,13 @@ class MainFragment : Fragment() {
     }
 
     private fun requestPermission() {
-        requestPermissions(
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-            REQUEST_CODE
-        )
+        activity?.let {
+            ActivityCompat.requestPermissions(
+                it,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_CODE
+            )
+        }
     }
 
     private fun checkPermissionsResult(requestCode: Int, grantResults: IntArray) {
